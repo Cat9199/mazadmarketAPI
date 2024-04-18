@@ -43,7 +43,7 @@ def register():
         email=email,
         password=password,
         username=username,
-        account_type=account_type,
+        acount_type=account_type,
         first_name=first_name,
         last_name=last_name,
         phone=phone,
