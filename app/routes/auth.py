@@ -29,10 +29,9 @@ def register():
     
     if loginType in ['Google', 'Facebook']:
         password = f"{loginType}LoginPasswordForMazadMarket"
-    
-    if not (email and password and username and account_type and first_name and last_name and phone and address and avatar and loginType):
+    if not (email and password and username and first_name and last_name and phone and address and avatar and loginType):
         return jsonify({'message': 'All fields are required'}), 400
-    
+   
     if User.query.filter_by(email=email).first():
         return jsonify({'message': 'Email already exists'}), 400
     
