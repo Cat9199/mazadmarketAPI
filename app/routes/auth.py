@@ -196,7 +196,7 @@ def forgot_password():
     print(new_password)
     send_reset_password_email(email, new_password)
     return jsonify({'message': 'Reset password link has been sent to your email'}), 200
-@auth_pd.route('/delete_account', methods=['POST'])
+@auth_bp.route('/delete_account', methods=['POST'])
 def delete_account():
     data = request.get_json()
     email = data['email']
