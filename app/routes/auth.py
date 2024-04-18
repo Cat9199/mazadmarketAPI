@@ -196,3 +196,16 @@ def forgot_password():
     print(new_password)
     send_reset_password_email(email, new_password)
     return jsonify({'message': 'Reset password link has been sent to your email'}), 200
+@auth_pd.route('/delete_account', methods=['POST'])
+def delete_account():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+    if user.password != password:
+        return jsonify({'message': 'Invalid password'}), 401
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'Account deleted successfully'}), 200
