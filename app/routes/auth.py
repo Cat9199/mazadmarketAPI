@@ -55,7 +55,7 @@ def register():
     db.session.commit()
 
     secret_key = 'MazadMarket2025@youfucksys'
-    token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(hours=24)}, secret_key, algorithm="HS256") 
+    token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
     return jsonify({'token': token, 'user': new_user.serialize()}), 201
 
 @auth_bp.route('/check_token', methods=['POST'])
@@ -72,7 +72,7 @@ def check_token():
     except jwt.ExpiredSignatureError:
         return jsonify({'message': 'Token has expired'}), 401
     except jwt.InvalidTokenError:
-        return jsonify({'message': 'Invalid token'}), 401
+        return jsonify({'message': 'Invalid token'}), 401   
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -95,11 +95,11 @@ def login():
             return jsonify({'message': 'user is not found'}), 
         elif user.loginType == loginType:
             if user.loginType == "Google" or user.loginType == 'Facebook':
-                tocken = jwt.encode({'id': user.id, 'exp': datetime.utcnow() + timedelta(hours=24)}, secret_key, algorithm="HS256")
+                token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
                 return jsonify({'token': tocken, 'user': user.serialize()}), 201
             elif user.loginType == 'Form':
                 if user.password == password:
-                    tocken = jwt.encode({'id': user.id, 'exp': datetime.utcnow() + timedelta(hours=24)}, secret_key, algorithm="HS256")
+                    token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
                     return jsonify({'token': tocken, 'user': user.serialize()}), 201
                 return jsonify({'message': 'Invalid password'}), 401
     except :
@@ -132,3 +132,32 @@ def delete_account():
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'Account deleted successfully'}), 200
+
+@auth_bp.route('/edit_account', methods=['POST'])
+def edit_account():
+    data = request.get_json()
+    tocken = data['tocken']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    phone = data['phone']
+    address = data['address']
+    avatar = data['avatar']
+    secret_key = 'MazadMarket2025@youfucksys'
+    try:
+        payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+        user = User.query.get(payload['id'])
+        if user:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.phone = phone
+            user.address = address
+            user.avatar = avatar
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({'user': user.serialize()}), 200
+        return jsonify({'message': 'User not found'}), 404
+    except jwt.ExpiredSignatureError:
+        return jsonify({'message': 'Token has expired'}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({'message': 'Invalid token'}), 401  
+
