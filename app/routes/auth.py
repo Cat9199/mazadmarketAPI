@@ -81,29 +81,29 @@ def login():
     username = data['username']
     password = data['password']
     loginType = data['login_type']
-    try :
-        if not (username):
-            return jsonify({'message': 'All fields are required'}), 400
-        user = User.query.filter_by(username=username).first()
-        if not user:
-            user = User.query.filter_by(email=username).first()
-            if not user:
-                user = User.query.filter_by(phone=username).first()
-                if not user:
-                    return jsonify({'message': 'user is not found'}), 404
-        if user.loginType != loginType:
-            return jsonify({'message': 'user is not found'}), 
-        elif user.loginType == loginType:
-            if user.loginType == "Google" or user.loginType == 'Facebook':
-                token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
-                return jsonify({'token': token, 'user': user.serialize()}), 201
-            elif user.loginType == 'Form':
-                if user.password == password:
-                    token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
-                    return jsonify({'token': token, 'user': user.serialize()}), 201
-                return jsonify({'message': 'Invalid password'}), 401
-    except :
-        return jsonify({'message': 'Invalid username'}), 401
+
+    if not username:
+        return jsonify({'message': 'All fields are required'}), 400
+
+    user = User.query.filter((User.username == username) | (User.email == username) | (User.phone == username)).first()
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    if user.loginType != loginType:
+        return jsonify({'message': 'Login type mismatch'}), 404
+
+    if user.loginType in ['Google', 'Facebook']:
+        token = jwt.encode({'id': user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
+        return jsonify({'token': token, 'user': user.serialize()}), 201
+
+    elif user.loginType == 'Form':
+        if user.password == password:
+            token = jwt.encode({'id': user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
+            return jsonify({'token': token, 'user': user.serialize()}), 201
+        else:
+            return jsonify({'message': 'Invalid password'}), 401
+
+    return jsonify({'message': 'Invalid login attempt'}), 401
 @auth_bp.route('/forgot_password', methods=['POST'])
 def forgot_password():
     data = request.get_json()
@@ -184,4 +184,3 @@ def change_password():
         return jsonify({'message': 'Token has expired'}), 401
     except jwt.InvalidTokenError:
             return jsonify({'message': 'Invalid token'}), 401
-    
