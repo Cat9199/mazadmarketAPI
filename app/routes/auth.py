@@ -96,11 +96,11 @@ def login():
         elif user.loginType == loginType:
             if user.loginType == "Google" or user.loginType == 'Facebook':
                 token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
-                return jsonify({'token': tocken, 'user': user.serialize()}), 201
+                return jsonify({'token': token, 'user': user.serialize()}), 201
             elif user.loginType == 'Form':
                 if user.password == password:
                     token = jwt.encode({'id': new_user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
-                    return jsonify({'token': tocken, 'user': user.serialize()}), 201
+                    return jsonify({'token': token, 'user': user.serialize()}), 201
                 return jsonify({'message': 'Invalid password'}), 401
     except :
         return jsonify({'message': 'Invalid username'}), 401
@@ -160,4 +160,28 @@ def edit_account():
         return jsonify({'message': 'Token has expired'}), 401
     except jwt.InvalidTokenError:
         return jsonify({'message': 'Invalid token'}), 401  
-
+@auth_bp.route('/change_password', methods=["POST"])
+def change_password():
+    data = request.get_json()
+    token = data['token']
+    email = data['email']
+    new_password = data['new_password']
+    current_password = data['current_password']
+    secret_key = 'MazadMarket2025@youfucksys'
+    try :
+        payload = jwt.decode(token, secret_key, algorithms=["HS256"])
+        user = User.query.get(payload['id'])
+        if user.email == email:
+            if user.password == current_password:
+                user.password = new_password
+                db.session.add(user)
+                db.session.commit()
+                return jsonify({'message': 'Password changed successfully'}), 200
+            return jsonify({'message': 'Invalid password'}), 401
+        else:
+            return jsonify({'message': 'User not found'}), 404
+    except jwt.ExpiredSignatureError:
+        return jsonify({'message': 'Token has expired'}), 401
+    except jwt.InvalidTokenError:
+            return jsonify({'message': 'Invalid token'}), 401
+    
