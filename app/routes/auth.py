@@ -137,26 +137,22 @@ def delete_account():
 def edit_account():
     data = request.get_json()
     tocken = data['tocken']
-    first_name = data['first_name']
-    last_name = data['last_name']
-    phone = data['phone']
-    address = data['address']
-    avatar = data['avatar']
+    # first_name = data['first_name']
+    # last_name = data['last_name']
+    # phone = data['phone']
+    # address = data['address']
+    # avatar = data['avatar']
     secret_key = 'MazadMarket2025@youfucksys'
     try:
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
         user = User.query.get(payload['id'])
         if user:
-            if first_name:
-                user.first_name = first_name
-            if last_name:
-                user.last_name = last_name
-            if phone:
-                user.phone = phone
-            if address:
-                user.address = address
-            if avatar:
-                user.avatar = avatar
+            if data['first_name'] :
+                user.first_name = data['first_name']
+            # user.last_name = last_name
+            # user.phone = phone
+            # user.address = address
+            # user.avatar = avatar
             db.session.add(user)
             db.session.commit()
             return jsonify({'user': user.serialize()}), 200
