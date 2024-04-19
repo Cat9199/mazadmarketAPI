@@ -4,6 +4,7 @@ import jwt
 from datetime import datetime, timedelta  
 import random
 import string
+from  app.forgot_password import send_reset_password_email
 auth_bp = Blueprint('auth', __name__)
 def generate_random_password():
     letters = string.ascii_letters
