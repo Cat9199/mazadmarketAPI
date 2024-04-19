@@ -2,9 +2,16 @@ from flask import Blueprint, request, jsonify
 from app.models import db, User
 import jwt
 from datetime import datetime, timedelta  
-
+import random
+import string
 auth_bp = Blueprint('auth', __name__)
-
+def generate_random_password():
+    letters = string.ascii_letters
+    numbers = string.digits
+    special_characters = string.punctuation
+    password_characters = f'{letters}{numbers}{special_characters}'
+    password = ''.join(random.choice(password_characters) for i in range(10))
+    return password
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
