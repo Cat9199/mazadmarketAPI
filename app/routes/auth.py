@@ -11,7 +11,7 @@ def register():
     email = data['email']
     password = data['password'] 
     username = data['username']
-    account_type = 'personal account'
+
     first_name = data['first_name']
     last_name = data['last_name']
     phone = data['phone']
@@ -22,7 +22,7 @@ def register():
     if loginType in ['Google', 'Facebook']:
         password = f"{loginType}LoginPasswordForMazadMarket"
     
-    if not (email and password and username and account_type and first_name and last_name and phone and address and avatar and loginType):
+    if not (email and password and username  and first_name and last_name and phone and address and avatar and loginType):
         return jsonify({'message': 'All fields are required'}), 400
     
     if User.query.filter_by(email=email).first():
@@ -35,7 +35,6 @@ def register():
         email=email,
         password=password,
         username=username,
-        account_type=account_type,
         first_name=first_name,
         last_name=last_name,
         phone=phone,

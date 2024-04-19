@@ -5,7 +5,7 @@ class User(db.Model):
         username = db.Column(db.String(80), unique=True, nullable=False)
         password = db.Column(db.String(80), nullable=False)
         email = db.Column(db.String(120), unique=True, nullable=False)
-        account_type = db.Column(db.String(80))
+
         first_name = db.Column(db.String(80), nullable=False)
         last_name = db.Column(db.String(80), nullable=False)
         phone = db.Column(db.String(80), nullable=False)                
@@ -18,7 +18,7 @@ class User(db.Model):
                         'id': self.id,
                         'username': self.username,
                         'email': self.email,
-                        'account_type': self.account_type,
+
                         'first_name': self.first_name,
                         'last_name': self.last_name,
                         'full_name': f'{self.first_name} {self.last_name}',
