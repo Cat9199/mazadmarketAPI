@@ -136,7 +136,7 @@ def delete_account():
 @auth_bp.route('/edit_account', methods=['POST'])
 def edit_account():
     data = request.get_json()
-    tocken = data['tocken']
+    token = data['token']
     # first_name = data['first_name']
     # last_name = data['last_name']
     # phone = data['phone']
