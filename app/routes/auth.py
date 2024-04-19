@@ -84,7 +84,6 @@ def login():
 
     if not username:
         return jsonify({'message': 'All fields are required'}), 400
-
     user = User.query.filter((User.username == username) | (User.email == username) | (User.phone == username)).first()
     if not user:
         return jsonify({'message': 'User not found'}), 404
