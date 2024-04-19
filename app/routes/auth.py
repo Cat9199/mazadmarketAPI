@@ -147,11 +147,16 @@ def edit_account():
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
         user = User.query.get(payload['id'])
         if user:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.phone = phone
-            user.address = address
-            user.avatar = avatar
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
+            if phone:
+                user.phone = phone
+            if address:
+                user.address = address
+            if avatar:
+                user.avatar = avatar
             db.session.add(user)
             db.session.commit()
             return jsonify({'user': user.serialize()}), 200
