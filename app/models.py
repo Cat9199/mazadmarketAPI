@@ -101,4 +101,13 @@ class Category(db.Model):
                         'ImageURL': self.ImageURL
                 }
 
+class ProductImg(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+        Img = db.Column(db.LargeBinary)
+
+class ProductVideos(models.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+        VideoFilePath = db.Column(db.String(1000), nullable=False)
 
