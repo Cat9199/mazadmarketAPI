@@ -92,6 +92,7 @@ def login():
         return jsonify({'message': 'Login type mismatch'}), 404
 
     if user.loginType in ['Google', 'Facebook']:
+        
         token = jwt.encode({'id': user.id, 'exp': datetime.utcnow() + timedelta(days=30)}, secret_key, algorithm="HS256")
         return jsonify({'token': token, 'user': user.serialize()}), 201
 
