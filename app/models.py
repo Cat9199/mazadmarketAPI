@@ -106,7 +106,7 @@ class ProductImg(db.Model):
         product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
         Img = db.Column(db.LargeBinary)
 
-class ProductVideos(models.Model):
+class ProductVideos(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
         VideoFilePath = db.Column(db.String(1000), nullable=False)
