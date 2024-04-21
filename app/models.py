@@ -110,4 +110,27 @@ class ProductVideos(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
         VideoFilePath = db.Column(db.String(1000), nullable=False)
-
+class UserProsingHistory(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+        product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+        Date = db.Column(db.DateTime, server_default=db.func.now())
+        def serialize(self):
+                return {
+                        'id': self.id,
+                        'user_id': self.user_id,
+                        'product_id': self.product_id,
+                        'Date': self.Date
+                }
+class UserWishlist(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+        product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+        Date = db.Column(db.DateTime, server_default=db.func.now())
+        def serialize(self):
+                return {
+                        'id': self.id,
+                        'user_id': self.user_id,
+                        'product_id': self.product_id,
+                        'Date': self.Date
+                }
