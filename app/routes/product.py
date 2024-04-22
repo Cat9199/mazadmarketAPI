@@ -45,25 +45,3 @@ def img_detail(img_id):
       if not img:
             return jsonify({'message': 'Image not found'}), 404
       return Response(img.Img, mimetype='image/jpeg')
-@Product_bp.route('/upload_video', methods=['POST'])
-
-def upload_video():
-      if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-        file = request.files['file']
-      if file.filename == '':
-            return jsonify({'error': 'No selected file'}), 400
-            # Save the file to the database
-            video = ProductVideos(Video=file.read())
-            db.session.add(video)
-            db.session.commit()
-            return jsonify({'message': 'Video uploaded successfully'}), 200
-            # return jsonify({'message': 'Image uploaded successfully'}), 200
-
-
-@Product_bp.route('/video/<int:video_id>', methods=['GET'])\
-def video_detail(video_id):
-            video = ProductVideos.query.filter_by(id=video_id).first()
-            if not video:
-                  return jsonify({'message': 'Video not found'}), 404
-            return Response(video.Video, mimetype='video/mp4')
