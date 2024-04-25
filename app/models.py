@@ -39,6 +39,7 @@ class LoginTimes(db.Model):
                         'device': self.device
                 }
 
+
 class Product(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(150), nullable=False)
@@ -109,3 +110,4 @@ class ProductVideos(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
         VideoFilePath = db.Column(db.String(1000), nullable=False)
+
